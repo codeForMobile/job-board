@@ -1,3 +1,14 @@
 type Query {
-    greeting: String
+    jobs: [Job!]
+}
+
+"""
+Job Type
+"""
+type Job {
+    id: ID!
+    """comment for title"""
+    title: String!
+    date: String!
+    description: String
 }
