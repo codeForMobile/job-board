@@ -1,5 +1,12 @@
 type Query {
     jobs: [Job!]
+    job(id: ID!): Job
+}
+
+type Company {
+    id: ID!
+    name: String!
+    description: String
 }
 
 """
@@ -10,5 +17,7 @@ type Job {
     """comment for title"""
     title: String!
     date: String!
+    company: Company!
     description: String
 }
+
