@@ -40,9 +40,13 @@ export const resolvers = {
   },
 
   Mutation: {
-    createJob: (_root, { input: { title, description } }) => {
-      const companyId = 'FjcJCHJALA4i'
-      return createJob({ companyId, title, description })
+    createJob: (_root, { input: { title, description } }, { user }) => {
+      if (!user) {
+        throw unauthorizedError('Missing user')
+      }
+      console.log('[createJob] user', user)
+      const companyId = user.companyId
+      return createJob({ companyId: companyId, title, description })
     },
     deleteJob: (_root, { id }) => {
       return deleteJob(id)
@@ -56,6 +60,12 @@ export const resolvers = {
 function notFoundError(msg) {
   throw new GraphQLError(msg, {
     extensions: { code: 'NOT_FOUND' },
+  })
+}
+
+function unauthorizedError(msg) {
+  throw new GraphQLError(msg, {
+    extensions: { code: 'NOT_AUTHORIZED' },
   })
 }
 
