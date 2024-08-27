@@ -44,15 +44,37 @@ export const resolvers = {
       if (!user) {
         throw unauthorizedError('Missing user')
       }
-      console.log('[createJob] user', user)
       const companyId = user.companyId
       return createJob({ companyId: companyId, title, description })
     },
-    deleteJob: (_root, { id }) => {
-      return deleteJob(id)
+    deleteJob: async (_root, { id }, { user }) => {
+      if (!user) {
+        throw unauthorizedError('Missing user')
+      }
+      const job = await deleteJob(id, user.companyId)
+      if (!job) {
+        throw notFoundError('Not authorized to delete job with id ' + id)
+      }
+      return job
     },
-    updateJob: (_root, { input: { id, title, description } }) => {
-      return updateJob({ id, title, description })
+    updateJob: async (
+      _root,
+      { input: { id, title, description } },
+      { user }
+    ) => {
+      if (!user) {
+        throw unauthorizedError('Missing user')
+      }
+      const job = await updateJob({
+        id,
+        title,
+        description,
+        companyId: user.companyId,
+      })
+      if (!job) {
+        throw notFoundError('Not authorized to update job with id ' + id)
+      }
+      return job
     },
   },
 }
