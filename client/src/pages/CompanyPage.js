@@ -6,8 +6,6 @@ function CompanyPage() {
   const { companyId } = useParams()
   const { loading, error, company } = useCompany(companyId)
 
-  console.log('[CompanyPage] state:', { company, loading, error })
-
   if (loading) {
     return <div>Loading Company....</div>
   }
