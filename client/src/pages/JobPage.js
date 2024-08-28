@@ -7,8 +7,6 @@ function JobPage() {
   const { jobId } = useParams()
   const { job, loading, error } = useJobById(jobId)
 
-  console.log('[JobPage]', { job, loading, error })
-
   if (loading) {
     return <div>Loading....</div>
   }
