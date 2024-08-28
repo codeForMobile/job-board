@@ -6,6 +6,7 @@ import { expressMiddleware as apolloMiddelware } from '@apollo/server/express4'
 import { authMiddleware, handleLogin } from './auth.js'
 import { resolvers } from './resolvers.js'
 import { getUser } from './db/users.js'
+import { createCompanyLoader } from './db/companies.js'
 
 const PORT = 9000
 
@@ -22,12 +23,15 @@ const apolloServer = new ApolloServer({
 })
 
 async function getContext({ req }) {
+  const companyLoader = createCompanyLoader()
+  const context = { companyLoader }
+
   if (req.auth) {
-    const user = await getUser(req.auth.sub)
-    return { user }
+    context.user = await getUser(req.auth.sub)
   }
-  return {}
+  return context
 }
+
 await apolloServer.start()
 app.use('/graphql', apolloMiddelware(apolloServer, { context: getContext }))
 
