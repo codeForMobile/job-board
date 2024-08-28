@@ -44,23 +44,26 @@ export async function getCompany(id) {
   return data.company
 }
 
-export async function getJob(id) {
-  const query = gql`
-    query ($id: ID!) {
-      job(id: $id) {
+const JobByIdQuery = gql`
+  query ($id: ID!) {
+    job(id: $id) {
+      id
+      date
+      title
+      company {
         id
-        date
-        title
-        company {
-          id
-          name
-        }
-        description
+        name
       }
+      description
     }
-  `
+  }
+`
 
-  const { data } = await apolloClient.query({ query, variables: { id } })
+export async function getJob(id) {
+  const { data } = await apolloClient.query({
+    query: JobByIdQuery,
+    variables: { id },
+  })
   return data.job
 }
 
@@ -91,6 +94,13 @@ export async function createJob({ title, description }) {
     mutation createJob($input: createJobInput!) {
       job: createJob(input: $input) {
         id
+        title
+        date
+        description
+        company {
+          id
+          name
+        }
       }
     }
   `
@@ -98,6 +108,15 @@ export async function createJob({ title, description }) {
   const { data } = await apolloClient.mutate({
     mutation,
     variables: { input: { title, description } },
+    update: (cache, { data }) => {
+      cache.writeQuery({
+        query: JobByIdQuery,
+        variables: {
+          id: data.job.id,
+        },
+        data,
+      })
+    },
   })
   return data.job
 }
