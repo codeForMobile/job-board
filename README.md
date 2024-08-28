@@ -1,5 +1,24 @@
-# GraphQL Job Board
+## GraphQL Job Board
 
-This is a project used in the [GraphQL by Example](https://www.udemy.com/course/graphql-by-example/?referralCode=7ACEB04674F000BAC061) course.
+Graphql based job board to allow users to 
 
-It uses Apollo Server with Express, and GraphQL-Request and Apollo Client as GraphQL clients. The application is used to explain queries, mutations, custom object types, authentication, etc.
+- login
+- logout
+- post a job
+
+Other features
+
+- route protect for create job
+- update & delete jobs are implemented only in backend and can be approached by graphql studio
+
+### Technlogoies involved and branches
+
+- `master` implementation with lightweight library `GraphQL-Request`
+- `useQuery` refactoring above with React `useQuery` and custom hooks
+- `dataloader` optimizing above with the `dataloader` library
+
+#### Other Technlogies 
+
+- `knex` is used for db persistence. Locally stored db is used.
+- `express` is used under the hood for apolloClient implementation.
+- `jwt` is used for auth tokens.
